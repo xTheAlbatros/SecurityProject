@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import * as Setting from "../Setting";
-import { useNavigate } from "react-router-dom"; // Zmienione na useNavigate
+import { useNavigate } from "react-router-dom";
 
 const AddArticlePage = () => {
     const [name, setName] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
-    const navigate = useNavigate(); // Zmienione na useNavigate
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!Setting.isLoggedIn()) {
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

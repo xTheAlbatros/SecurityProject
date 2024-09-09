@@ -1,14 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { TabulatorFull as Tabulator } from "tabulator-tables";
+import { useNavigate } from "react-router-dom";
+import * as Setting from "../Setting";
 
 const CasbinManager = () => {
     const rolesTableRef = useRef(null);
     const usersTableRef = useRef(null);
-    const rolesTableInstance = useRef(null); // Trzymamy instancję Tabulatora
-    const usersTableInstance = useRef(null); // Trzymamy instancję Tabulatora
+    const rolesTableInstance = useRef(null);
+    const usersTableInstance = useRef(null);
     const apiBaseUrl = "http://localhost:8083";
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (!Setting.isLoggedIn()) {
+            navigate("/");
+        }
+
         const token = localStorage.getItem("token");
 
         function transformData(data) {
@@ -66,7 +73,7 @@ const CasbinManager = () => {
                     ]
                 });
 
-                tableInstanceRef.current = table; // Zapisz instancję Tabulatora do ref
+                tableInstanceRef.current = table;
 
                 table.on("cellEdited", async (cell) => {
                     const data = cell.getRow().getData();
@@ -109,7 +116,7 @@ const CasbinManager = () => {
         fetchTableData(rolesTableRef, "p", rolesTableInstance);
         fetchTableData(usersTableRef, "g", usersTableInstance);
 
-    }, []);
+    }, [navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -127,7 +134,6 @@ const CasbinManager = () => {
 
         const token = localStorage.getItem("token");
 
-        // Przeniesienie transformData wewnątrz handleSubmit, aby było dostępne
         function transformData(data) {
             return data.map(row => ({
                 id: row.id,
@@ -152,7 +158,7 @@ const CasbinManager = () => {
             });
             const result = await response.json();
             if (result.status === 'rule added') {
-                // Odświeżanie danych po dodaniu
+
                 if (rolesTableInstance.current) {
                     const fetchDataResponse = await fetch(`${apiBaseUrl}/api/rules`, {
                         method: "GET",

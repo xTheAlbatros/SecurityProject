@@ -1,15 +1,21 @@
 // ArticlesPage.js
 import React, { useEffect, useState } from "react";
 import * as Setting from "../Setting";
+import {useNavigate} from "react-router-dom";
 
 const ArticlesPage = () => {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        // Pobieranie artykułów po załadowaniu komponentu
-        fetchArticles();
-    }, []);
+        if (!Setting.isLoggedIn()) {
+            navigate("/");
+        } else {
+            fetchArticles();
+        }
+    }, [navigate]);
 
     const fetchArticles = async () => {
         const token = localStorage.getItem("token");

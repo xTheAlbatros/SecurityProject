@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import * as Setting from "../Setting";
-import { useNavigate } from "react-router-dom"; // Zmienione na useNavigate
+import { useNavigate } from "react-router-dom";
 
 const ArticleManagePage = () => {
     const [articles, setArticles] = useState([]);
     const [selectedArticleId, setSelectedArticleId] = useState("");
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate(); // Zmienione na useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchArticles();
-    }, []);
+        if (!Setting.isLoggedIn()) {
+            navigate("/");
+        } else {
+            fetchArticles();
+        }
+    }, [navigate]);
 
     const fetchArticles = async () => {
         const token = localStorage.getItem("token");
@@ -85,7 +89,7 @@ const ArticleManagePage = () => {
             Setting.showMessage("Article deleted successfully.");
             setSelectedArticle(null);
             setSelectedArticleId("");
-            fetchArticles(); // Odśwież listę artykułów
+            fetchArticles();
         } catch (error) {
             console.error("Error deleting article:", error);
             Setting.showMessage("Unable to delete the article.");
@@ -93,7 +97,7 @@ const ArticleManagePage = () => {
     };
 
     const handleAddNewArticle = () => {
-        navigate("/add-article"); // Zmienione na navigate
+        navigate("/add-article");
     };
 
     if (loading) {
