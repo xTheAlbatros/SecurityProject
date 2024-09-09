@@ -56,7 +56,11 @@ class HomePage extends React.Component {
               <p>Welcome {this.state.account.username}!</p>
               <br/>
               <Link to="/articles">
-                <button>Articles</button>
+                <button>View Articles</button>
+              </Link>
+              <br/>
+              <Link to="/manage-articles">
+                <button>Manage Articles</button>
               </Link>
               <br/>
               <Link to="/casbinmanager">
